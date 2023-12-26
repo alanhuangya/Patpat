@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.games.tap.mapper.PostLikeMapper">
+
+    <insert id="postLike">
+        insert into post_like(pid, uid) VALUES (#{pid},#{uid})
+    </insert>
+
+    <update id="addLikeNum">
+        UPDATE post SET like_num=post.like_num+1 WHERE pid=#{pid}
+    </update>
+
+    <update id="subLikeNum">
+        UPDATE post SET like_num=post.like_num-1 WHERE post.like_num>0 and pid=#{pid}
+    </update>
+
+    <delete id="postCancelLike">
+        delete from post_like where uid=#{uid} and pid=#{pid}
+    </delete>
+
+    <select id="getPostLikes" resultType="java.lang.Integer">
+        select count(*) from post_like where pid=#{pid}
+    </select>
+
+    <select id="getUserLikePostList" resultType="com.games.tap.vo.UserPostInfo">
+        SELECT post.*,f.name AS forum_name,avatar,IFNULL(level,1)AS level,
+               IFNULL(nickname,'用户已注销') AS nickname, true AS is_like
+        FROM (SELECT * FROM post_like WHERE uid=#{uid}) pl
+            LEFT JOIN post ON post.pid = pl.pid
+            LEFT JOIN user u ON post.uid = u.uid
+            LEFT JOIN forum_user fu ON post.fid = fu.fid AND post.uid = fu.uid
+            LEFT JOIN forum f ON post.fid = f.fid
+        ORDER BY last_date DESC
+        <if test="pageSize!=null ">
+            LIMIT #{pageSize}
+        </if>
+        <if test="offset!=null ">
+            OFFSET #{offset}
+        </if>
+    </select>
+
+    <select id="isPostExited" resultType="java.lang.Integer">
+        select * from post_like where uid=#{uid} and pid=#{pid} LIMIT 1
+    </select>
+
+</mapper>

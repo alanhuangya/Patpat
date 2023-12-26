@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.games.tap.mapper.ConMapper">
+
+    <select id="getFanList" resultType="com.games.tap.vo.UserInfo">
+        SELECT uid,avatar,intro,fans_num,IFNULL(nickname,'用户已注销') AS nickname
+        FROM concern LEFT JOIN user
+        ON user.uid=concern.following_uid WHERE followed_uid=#{id}
+        <if test="pageSize!=null ">
+            LIMIT #{pageSize}
+        </if>
+        <if test="offset!=null ">
+            OFFSET #{offset}
+        </if>
+    </select>
+
+    <select id="getFollowList" resultType="com.games.tap.vo.UserInfo">
+        SELECT uid,avatar,intro,fans_num,IFNULL(nickname,'用户已注销') AS nickname
+        FROM concern LEFT JOIN user
+        ON user.uid=concern.followed_uid WHERE following_uid=#{id}
+        <if test="pageSize!=null ">
+            LIMIT #{pageSize}
+        </if>
+        <if test="offset!=null ">
+            OFFSET #{offset}
+        </if>
+    </select>
+
+    <select id="getLikeList" resultType="java.lang.Boolean">
+        SELECT IF(id=null,false,true) FROM concern
+        WHERE following_uid=#{uid} AND followed_uid IN
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="isFollow" resultType="com.games.tap.domain.Concern">
+        SELECT * FROM concern WHERE following_uid=#{following} and followed_uid=#{followed} LIMIT 1
+    </select>
+
+    <insert id="follow" useGeneratedKeys="true">
+        INSERT INTO concern(followed_uid, following_uid) VALUES (#{followed},#{following});
+        UPDATE user SET fans_num=fans_num+1 WHERE uid=#{followed};
+        UPDATE user SET follow_num=user.follow_num+1 WHERE uid=#{following};
+    </insert>
+
+    <delete id="unfollow">
+        DELETE FROM concern WHERE following_uid=#{following} and followed_uid=#{followed};
+        UPDATE user SET fans_num=fans_num-1 WHERE uid=#{followed};
+        UPDATE user SET follow_num=user.follow_num-1 WHERE uid=#{following};
+    </delete>
+
+</mapper>

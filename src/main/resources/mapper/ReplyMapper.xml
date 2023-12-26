@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.games.tap.mapper.ReplyMapper">
+
+    <select id="getReplyById" resultType="com.games.tap.domain.Reply">
+        SELECT * FROM reply WHERE rid=#{rid} LIMIT 1
+    </select>
+
+    <select id="getReplyByFloor" resultType="com.games.tap.domain.Reply">
+        SELECT * FROM reply
+        WHERE pid = #{pid}
+          AND floor_num = #{floor}
+          AND is_floor = true
+        LIMIT 1
+    </select>
+
+    <select id="getMaxFloor" resultType="java.lang.Integer">
+        SELECT MAX(floor_num) FROM (SELECT floor_num FROM reply WHERE pid=#{pid}) as rfn
+    </select>
+
+    <select id="getSubReplyList" resultType="com.games.tap.vo.SubReply">
+        SELECT r.rid, r.content, r.like_num, r.post_time, r.uid, r.reply_to_uid AS r2id,
+            IFNULL(u1.nickname,'用户已注销') AS nickname, u1.avatar,
+            IFNULL(u2.nickname,'用户已注销') AS r2name, IFNULL(level,1)AS level,
+        (CASE
+            WHEN #{uid} IS null THEN false
+        <if test="uid!=null ">
+            WHEN rl.id IS null THEN false
+        </if>
+            ELSE true
+        END) AS is_like
+        FROM (SELECT * FROM reply WHERE pid=#{pid} AND floor_num=#{floor}
+             <if test="offset!=0 and offset!=null">
+                 AND is_floor=false
+             </if>
+            )
+            AS r LEFT JOIN (SELECT uid, nickname,avatar FROM user) u1 ON r.uid=u1.uid
+            LEFT JOIN (SELECT uid, nickname FROM user) u2 ON r.reply_to_uid = u2.uid
+            LEFT JOIN forum_user fu ON fu.uid = u1.uid AND fu.fid=r.fid
+        <if test="uid!=null ">
+            LEFT JOIN reply_like rl ON r.rid = rl.rid AND rl.uid = #{uid}
+        </if>
+        ORDER BY post_time
+        <if test="rank==0 ">DESC</if>
+        <if test="pageSize!=null ">
+            LIMIT #{pageSize}
+        </if>
+        <if test="offset!=null ">
+            OFFSET #{offset}
+        </if>
+    </select>
+
+    <select id="getRIdByFloor" resultType="java.lang.Long">
+        SELECT rid
+        FROM reply
+        WHERE pid = #{pid}
+          AND floor_num = #{floor}
+          AND is_floor = true
+        LIMIT 1
+    </select>
+
+    <update id="subFloorReplyNum">
+        UPDATE reply
+        SET reply_num=reply_num - 1
+        WHERE pid = #{pid}
+          AND floor_num = #{floor}
+          AND is_floor = true
+    </update>
+
+    <update id="addFloorReplyNum">
+        UPDATE reply
+        SET reply_num=reply_num + 1
+        WHERE rid=#{rid}
+    </update>
+
+    <insert id="insertReply" parameterType="com.games.tap.domain.Reply" useGeneratedKeys="true" keyProperty="rId">
+         INSERT INTO reply (content, fid, floor_num, is_floor, pid,
+                            post_time, reply_to_uid, reply_to_rid, uid)
+         VALUES (#{content},#{fId},#{floorNum},#{isFloor},#{pId},
+                 #{postTime},#{replyToUid},#{replyToRid},#{uId})
+    </insert>
+
+    <delete id="deleteById">
+        DELETE FROM reply WHERE rid=#{rid}
+    </delete>
+
+    <delete id="deleteByFloorNum">
+        DELETE FROM reply WHERE pid=#{pid} AND floor_num=#{floor}
+    </delete>
+
+</mapper>

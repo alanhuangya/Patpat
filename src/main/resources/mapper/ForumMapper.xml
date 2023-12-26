@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.games.tap.mapper.ForumMapper">
+
+    <select id="getAllForum" resultType="com.games.tap.domain.Forum">
+        SELECT * FROM forum;
+    </select>
+
+    <select id="getForumPostList" resultType="com.games.tap.vo.PostBasicInfo">
+        SELECT fpost.pid,fpost.uid,post_time,like_num,reply_num,title,content,picture,avatar,
+        IFNULL(nickname,'用户已注销') AS nickname,IFNULL(level,1)AS level,
+        (CASE
+        WHEN #{uid} IS null THEN false
+        <if test="uid!=null ">
+            WHEN pl.id IS null THEN false
+        </if>
+            ELSE true
+        END) AS is_like
+        FROM (SELECT * FROM post WHERE fid=#{fid}) fpost
+        LEFT JOIN (SELECT uid, nickname,avatar FROM user) u ON fpost.uid = u.uid
+        LEFT JOIN forum_user fu ON fpost.fid = fu.fid AND fpost.uid = fu.uid
+        <if test="uid!=null ">
+            LEFT JOIN post_like pl ON fpost.pid = pl.pid AND pl.uid = #{uid}
+        </if>
+        ORDER BY
+        <choose>
+            <when test="rank==1 ">post_time</when>
+            <when test="rank==2 ">reply_num</when>
+            <otherwise>last_date</otherwise>
+        </choose>
+        DESC
+        <if test="pageSize!=null ">
+            LIMIT #{pageSize}
+        </if>
+        <if test="offset!=null ">
+            OFFSET #{offset}
+        </if>
+    </select>
+
+    <select id="getForumList" resultType="com.games.tap.vo.ForumInfo">
+        SELECT fid,name,icon,follow_num,post_num,false AS is_like FROM forum WHERE follow_num>=0
+        ORDER BY follow_num DESC
+        <if test="pageSize!=null ">
+            LIMIT #{pageSize}
+        </if>
+        <if test="offset!=null ">
+            OFFSET #{offset}
+        </if>
+    </select>
+
+    <select id="getForumListWithUserId" resultType="com.games.tap.vo.ForumInfo">
+        SELECT forum.fid,name,icon,follow_num,post_num,IFNULL(is_like,false) AS is_like FROM forum LEFT JOIN
+            (SELECT fid,is_like FROM forum_user WHERE uid=#{uid})AS user_forum
+        ON forum.fid=user_forum.fid WHERE follow_num>=0
+        ORDER BY follow_num DESC
+        <if test="pageSize!=null ">
+            LIMIT #{pageSize}
+        </if>
+        <if test="offset!=null ">
+            OFFSET #{offset}
+        </if>
+    </select>
+
+    <select id="getForumById" resultType="com.games.tap.domain.Forum">
+        SELECT * FROM forum WHERE fid=#{id} LIMIT 1
+    </select>
+
+    <select id="getPicsByFId" resultType="java.lang.String">
+        select picture from post where fid=#{fid}
+    </select>
+
+    <select id="getForumNameById" resultType="java.lang.String">
+        select name from forum where fid=#{id}
+    </select>
+
+    <select id="getPIdListByFId" resultType="java.lang.Long">
+        select pid from post where fid=#{fid}
+    </select>
+
+    <select id="getSearchPostListById" resultType="com.games.tap.vo.SearchedPost">
+        select fpost.*,forum.name as forum_name from (select pid, like_num, reply_num, title,content, picture from post
+        where fid=#{fid}) fpost left join forum on fid=#{fid}
+    </select>
+
+    <select id="getForumInfo" resultType="com.games.tap.vo.UserForumInfo">
+        SELECT f.*,exp,level,is_like FROM (SELECT * FROM forum WHERE fid=#{fid} LIMIT 1)
+            AS f LEFT JOIN forum_user fu ON f.fid= fu.fid AND fu.uid=#{uid}
+    </select>
+
+    <select id="getForumByName" resultType="com.games.tap.domain.Forum">
+        SELECT * FROM forum WHERE name=#{name} LIMIT 1
+    </select>
+
+    <select id="selectIconById" resultType="java.lang.String">
+        select icon from forum where fid=#{fid}
+    </select>
+
+    <insert id="insertForum" parameterType="com.games.tap.domain.Forum" useGeneratedKeys="true" keyProperty="fId">
+        INSERT INTO forum (intro, name, icon) VALUES (#{intro},#{name},#{icon})
+    </insert>
+
+    <update id="updateForum" parameterType="com.games.tap.domain.Forum">
+        UPDATE forum SET intro=#{intro},name=#{name},icon=#{icon} WHERE fid=#{fId}
+    </update>
+
+    <update id="addPostNum">
+        UPDATE forum SET post_num=post_num+1 WHERE fid=#{fid}
+    </update>
+
+    <update id="subPostNum">
+        UPDATE forum SET post_num=post_num-1 WHERE fid=#{fid}
+    </update>
+
+    <delete id="deleteForumById">
+        DELETE FROM forum WHERE fid=#{id};
+        DELETE FROM post WHERE fid=#{id};
+        DELETE FROM reply WHERE fid=#{id};
+    </delete>
+
+</mapper>
