@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:id="@+id/group1"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/drawer_person_page"
+            android:icon="@drawable/drawer_person_page"
+            android:title="@string/drawer_person_page"/>
+        <item
+            android:id="@+id/drawer_follow"
+            android:icon="@drawable/drawer_follow"
+            android:title="@string/drawer_follow"/>
+        <item
+            android:id="@+id/drawer_collect"
+            android:icon="@drawable/drawer_collect"
+            android:title="@string/drawer_collect"/>
+    </group>
+
+    <group android:id="@+id/group2"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/drawer_dark_mode"
+            android:icon="@drawable/drawer_dark_mode"
+            android:title="@string/drawer_password_modify"/>
+        <item
+            android:id="@+id/drawer_version"
+            android:icon="@drawable/drawer_version"
+            android:title="@string/drawer_version"/>
+    </group>
+
+    <group android:id="@+id/group3"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/drawer_logout"
+            android:icon="@drawable/drawer_logout"
+            android:title="@string/drawer_logout"/>
+    </group>
+
+</menu>

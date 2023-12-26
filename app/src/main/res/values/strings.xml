@@ -1,0 +1,78 @@
+<resources>
+    <string name="app_name">Patpat</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+
+    <string name="title_home">首页</string>
+    <string name="title_discovery">发现</string>
+    <string name="title_dynamic">动态</string>
+    <string name="title_messages">消息</string>
+
+    <!--首页相关-->
+    <string name="home_tabNum">2</string>
+    <string name="home_recommend">推荐</string>
+    <string name="home_leaderboard">排行榜</string>
+    <string name="home_search_hint">请输入想要查找的内容</string>
+
+    <!--弹出菜单-->
+    <string name="drawer_person_page">个人主页</string>
+    <string name="drawer_follow">关注</string>
+    <string name="drawer_collect">收藏</string>
+    <string name="drawer_password_modify">修改密码</string>
+    <string name="drawer_version">当前版本</string>
+    <string name="drawer_logout">退出登录</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome "</string>
+    <string name="invalid_username">账号不能为空</string>
+    <string name="invalid_password">密码应由不小于6位的数字和字母组成</string>
+    <string name="login_failed">"Login failed"</string>
+
+    <!--webView相关-->
+    <string name="url_prefix">file:///android_asset/dist/</string>
+    <string name="url_suffix">index.html#/</string>
+    <string name="url_recommend">recommend</string>
+    <string name="url_leaderboard">top</string>
+    <string name="url_discovery">discover</string>
+    <string name="url_search">search</string>
+    <string name="url_forum_recommend">-2</string>
+    <string name="url_forum_follow">-1</string>
+    <string name="url_post">post</string>
+
+    <!--搜索界面-->
+    <string name="grid_hot_text">热搜榜</string>
+
+    <!--JS_url-->
+    <string name="intent_url_name">url</string>
+    <string name="intent_post_pid">pid</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--登录、注册界面-->
+    <string name="accountText">账号</string>
+    <string name="passwdText">密码</string>
+    <string name="loginButton">登录</string>
+    <string name="register"><u>注册账号</u></string>
+    <!--    <string name="protocol1">勾选即代表同意<font color=#F1A6A6>《服务协议》</font>和<font color=#F1A6A6>《隐私政策》</font></string>-->
+    <string name="protocol">勾选即代表同意《服务协议》和《隐私政策》</string>
+    <string name="account_form">账号不能为空</string>
+    <string name="passwd_form">密码应由不小于6位的数字和字母组成</string>
+    <string name="confirmPasswd">确认密码</string>
+    <string name="passwd_same">再次输入密码</string>
+    <string name="registerButton">注册</string>
+    <string name="passwd_confirm">密码前后应一致</string>
+    <string name="saved_user_account_key">saved_user_account</string>
+    <string name="preference_file_key">patpat_sharePreference</string>
+    <string name="log_tag">TEST</string>
+    <string name="saved_token_key">saved_token</string>
+    <string name="server_ip">http://123.207.30.101</string>
+
+    <!--请求信息-->
+    <string name="request_url">http://123.207.30.101/</string>
+    <string name="uid">1149901</string>
+    <string name="token">eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ7XCJuaWNrbmFtZVwiOlwi55So5oi3YTZiOTQ0XCIsXCJpbnRyb1wiOlwi562-5ZCN5piv5LiA56eN5oCB5bqm77yM5oiR5oOz5oiR5Y-v5Lul5pu06YW3XCIsXCJnZW5kZXJcIjowLFwicmVnaXN0ZXJUaW1lXCI6XCIyMDIyLTA2LTI2IDE3OjMxOjU4XCIsXCJmYW5zTnVtXCI6MCxcImZvbGxvd051bVwiOjAsXCJhdmF0YXJcIjpudWxsLFwiYmFja2dyb3VuZFwiOm51bGwsXCJ1c2VybmFtZVwiOlwia3Vkb3VcIixcInBhc3N3b3JkXCI6XCIkMmEkMTIkLnlUdDFpTWlEY213cE9KMHEyM0lhLndObUJRVFV2UlBMSENJbDdRRGFZZGguaXhwWXNvLlNcIixcInVpZFwiOjExNDk5MDF9IiwidWlkIjoxMTQ5OTAxLCJleHAiOjE2NTYyNjQ4MjYsInVzZXJuYW1lIjoia3Vkb3UifQ.5CTQtcB1X5kBihGfAQ4HfZsuOQrtYS9A19GD2RB050Q</string>
+
+</resources>
